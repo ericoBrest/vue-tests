@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test vue simple application</title>
+    <style>
+         :root {
+            font-size: 10px;
+        }
+        
+        body {
+            font-size: 1.4rem;
+            text-align: center;
+        }
+        
+        figure {
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1rem;
+            width: 20rem;
+            border: 1rem solid gray;
+        }
+        
+        figure img {
+            width: 100%;
+        }
+        
+        .explanations {
+            border: 1px dotted silver;
+            background-color: whitesmoke;
+            color: midnightblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{ message }}</h1>
+        <p>Tests avec les directives</p>
+
+        <h2>v-on, v-show</h2>
+
+        <div class="explanations">
+            <p>La directive <strong>v-on (abrégée @)</strong> correspond à un écouteur d'événement (comme <em>onclik</em> en Javascript).</p>
+            <p>La directive <strong>v-show</strong> se contente d'appliquer ou enlever un style <em>display: none</em> sur l'élément.</p>
+        </div>
+
+        <p>Oui, je souhaite connaître la réponse à la grande question sur la vie, l'univers et le reste !</p>
+        <button @click="showAnswer = !showAnswer" title="Connaître la réponse à la question ultime">{{ buttonWording }}</button>
+        <figure v-show="showAnswer">
+            <p>La réponse à l'ultime question est : 42 !</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Answer_to_Life.png" />
+        </figure>
+
+        <hr>
+
+        <h2>v-model, v-if, v-else, v-for</h2>
+
+        <div class="explanations">
+            <p>La directive <strong>v-model</strong> sur une liste de sélection permet de récupérer la clé de l'option qui est sélectionnée. Mais cet directive sert à beaucoup d'autres choses.</p>
+        </div>
+
+        <p>Quel est votre film préféré ?</p>
+        <select name="film" id="film" v-model="userFilm">
+          <option value="0" disabled selected>Choisissez dans la liste !</option>
+          <option v-for="item in myFilms" :value="item.id" >{{ item.title }}</option>
+          <!-- <option value="" disabled selected>Choisissez dans la liste !</option>
+          <option value="1">Alien</option>
+          <option value="2">Shining</option>
+          <option value="3">Les Griffes de la nuit</option>
+          <option value="4">Le Loup-garou de Londres</option>
+          <option value="5"> La Soupe aux choux</option> -->
+        </select>
+        <p>userFilm : {{ userFilm }}</p>
+        <p v-if="userFilm === 0">Bon allez, choisissez un film dans la liste ci-dessus !</p>
+        <div v-else>
+            <!-- Il y a un décalage entre les options de liste et les items de myFilms; j'applique -1 à la clé de userFilm pour faire correspondre à la clé de myFilms -->
+            <p>Ah, vous avez choisi {{ myFilms[userFilm - 1].title }} !</p>
+            <p>{{ myFilms[userFilm - 1].myAdvice }}</p>
+        </div>
+
+        <hr>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script>
+        const app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Bonjour Vue.js !',
+                showAnswer: false,
+                userFilm: 0,
+                myFilms: [{
+                    id: 1,
+                    title: 'Alien',
+                    myAdvice: 'J\'adore ! Trop cool avec Sigourney et son chat contre le 8e passager !'
+                }, {
+                    id: 2,
+                    title: 'Shining',
+                    myAdvice: 'Trop bien !! Avec Nicholson dans le rôle du fou à la hache !'
+                }, {
+                    id: 3,
+                    title: 'Les Griffes de la nuit',
+                    myAdvice: 'Ah, ce film... Je n\'ai pas dormi pendant des jours après l\'avoir vu !'
+                }, {
+                    id: 4,
+                    title: 'Le Loup-garou de Londres',
+                    myAdvice: 'Bôf ! Je n\'en ai pas un souvenir impérissable... Je ne m\'en souviens plus !'
+                }, {
+                    id: 5,
+                    title: 'La Soupe aux choux',
+                    myAdvice: 'Ah... Si vous aimez ce film, je ne peux rien pour vous. Au revoir !'
+                }, ]
+            },
+            computed: {
+                buttonWording() {
+                    if (this.showAnswer) {
+                        return 'Masquer la réponse'
+                    } else {
+                        return 'Afficher la réponse'
+                    }
+                },
+                selectFilm() {
+                    console.log('choix ok !')
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
