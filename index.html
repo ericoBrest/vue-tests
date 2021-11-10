@@ -9,6 +9,11 @@
     <style>
          :root {
             font-size: 10px;
+            --vertical-spacing-flow: 1rem;
+            --padding-standard: 0.5rem;
+            --padding-medium: 1rem;
+            --radius-small: 0.3rem;
+            --radius-standard: 1rem;
         }
         
         body {
@@ -17,14 +22,33 @@
             max-width: 60rem;
             margin-left: auto;
             margin-right: auto;
+            padding-left: var(--padding-medium);
+            padding-right: var(--padding-medium);
+            margin-bottom: 5rem;
+        }
+        
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        button,
+        select,
+        ul,
+        ol,
+        li {
+            margin-top: 0;
+            margin-bottom: var(--vertical-spacing-flow);
         }
         
         figure {
             margin-left: auto;
             margin-right: auto;
-            padding: 1rem;
+            padding: var(--padding-medium);
             width: 20rem;
             border: 1rem solid gray;
+            background-color: white;
         }
         
         figure img {
@@ -33,8 +57,29 @@
         
         .explanations {
             border: 1px dotted silver;
+            padding: var(--padding-medium);
+            margin-bottom: var(--vertical-spacing-flow);
             background-color: whitesmoke;
             color: midnightblue;
+        }
+        
+        .tests {
+            border: 1px dotted silver;
+            padding: var(--padding-medium);
+            border-radius: var(--radius-standard);
+            margin-bottom: var(--vertical-spacing-flow);
+            background-color: antiquewhite;
+            color: darkslategray;
+        }
+        
+        .example {
+            display: block;
+            padding: var(--padding-standard);
+            margin-bottom: var(--vertical-spacing-flow);
+            border-radius: var(--radius-small);
+            font-size: 1rem;
+            background-color: darkslategray;
+            color: white;
         }
     </style>
 </head>
@@ -42,45 +87,77 @@
 <body>
     <div id="app">
         <h1>{{ message }}</h1>
-        <p>Tests avec les directives</p>
+        <p>Mémo et exemples sur l'utilisation de Vue.js</p>
 
-        <h2>v-on, v-show</h2>
+        <h2>Les directives</h2>
 
-        <div class="explanations">
-            <p>La directive <strong>v-on (abrégée @)</strong> correspond à un écouteur d'événement (comme <em>onclik</em> en Javascript).</p>
+        <article class="explanations">
+            <h3>v-on</h3>
+            <p>La directive <strong>v-on (abrégée @)</strong> correspond à un écouteur d'événement (comme <em>onclick</em> en Javascript).</p>
+            <code class="example">&lt;button @click="showAnswer = !showAnswer"&gt;Afficher la réponse&lt;/button&gt;</code>
+            <p>showAnswer passe à true ou false à chaque clic.</p>
+        </article>
+
+        <article class="explanations">
+            <h3>v-show</h3>
             <p>La directive <strong>v-show</strong> se contente d'appliquer ou enlever un style <em>display: none</em> sur l'élément.</p>
-        </div>
+            <code class="example">&lt;p v-show="showAnswer"&gt;Bonjour&lt;/p&gt;</code>
+            <p>Si showAnswer est false, le contenu aura un display="none".</p>
+        </article>
 
-        <p>Oui, je souhaite connaître la réponse à la grande question sur la vie, l'univers et le reste !</p>
-        <button @click="showAnswer = !showAnswer" title="Connaître la réponse à la question ultime">{{ buttonWording }}</button>
-        <figure v-show="showAnswer">
-            <p>La réponse à l'ultime question est : 42 !</p>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Answer_to_Life.png" />
-        </figure>
+        <section class="tests">
+            <h3>Test avec v-on et v-show</h3>
+            <p>Oui, je souhaite connaître la réponse à la grande question sur la vie, l'univers et le reste !</p>
+            <button @click="showAnswer = !showAnswer" title="Connaître la réponse à la question ultime">{{ buttonWording }}</button>
+            <figure v-show="showAnswer">
+                <p>La réponse à l'ultime question est : 42 !</p>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/56/Answer_to_Life.png" />
+            </figure>
+        </section>
 
-        <hr>
-
-        <h2>v-model, v-if, v-else, v-for</h2>
-
-        <div class="explanations">
+        <article class="explanations">
+            <h3>v-model</h3>
             <p>La directive <strong>v-model</strong> sur une liste de sélection permet de récupérer la clé de l'option qui est sélectionnée. Mais cet directive sert à beaucoup d'autres choses.</p>
-        </div>
+            <code class="example">&lt;select name="film" id="film" v-model="userFilm"&gt;(...)&lt;/select&gt;</code>
+        </article>
 
-        <p>Quel est votre film préféré ?</p>
-        <select name="film" id="film" v-model="userFilm">
-          <option value="0" disabled selected>Choisissez dans la liste !</option>
-          <option v-for="item in myFilms" :value="item.id" >{{ item.title }}</option>
-        </select>
-        <p>userFilm : {{ userFilm }}</p>
-        <p v-if="userFilm === 0">Bon allez, choisissez un film dans la liste ci-dessus !</p>
-        <div v-else>
-            <!-- Il y a un décalage entre les options de liste et les items de myFilms; j'applique -1 à la clé de userFilm pour faire correspondre à la clé de myFilms -->
-            <p>Ah, vous avez choisi {{ myFilms[userFilm - 1].title }} !</p>
-            <p>{{ myFilms[userFilm - 1].myAdvice }}</p>
-            <img v-if="myFilms[userFilm - 1].imgPath" :src="myFilms[userFilm - 1].imgPath" :alt="'Affiche du film ' + myFilms[userFilm - 1].title">
-        </div>
+        <article class="explanations">
+            <h3>v-if, v-else</h3>
+            <p>Affiche l'élément si la condition est vérifiée.</p>
+            <code class="example">&lt;p v-if="userFilm === 0"&gt;Veuillez choisir un film dans la liste ci-dessus !&lt;/p&gt;</code>
+            <code class="example">&lt;p v-else&gt; Vous avez choisi (...)&lt;/p&lg;</code>
+        </article>
 
-        <hr>
+        <article class="explanations">
+            <h3>v-for</h3>
+            <p>Boucle sur le contenu d'un tableau.</p>
+            <code class="example">&lt;option v-for="item in myFilms" &gt; item.title &lt;/option&gt;</code>
+        </article>
+
+        <article class="explanations">
+            <h3>v-bind</h3>
+            <p>La directive <strong>v-bind (abrégée :)</strong> permet d'afficher une valeur d'un attribut de façon dynamique.</p>
+            <code class="example">&lt;option v-for="item in myFilms" :value="item.id" &gt; item.title &lt;/option&gt;</code>
+        </article>
+
+        <section class="tests">
+            <h3>Quel est votre film préféré ?</h3>
+            <select name="film" id="film" v-model="userFilm">
+              <option value="0" disabled selected>Choisissez dans la liste !</option>
+              <option v-for="item in myFilms" :value="item.id" >{{ item.title }}</option>
+            </select>
+            <p v-if="userFilm === 0">Veuillez choisir un film dans la liste ci-dessus !</p>
+            <div v-else>
+                <!-- Il y a un décalage entre les options de liste et les items de myFilms; j'applique -1 à la clé de userFilm pour faire correspondre à la clé de myFilms -->
+                <p>Vous avez choisi <strong>{{ myFilms[userFilm - 1].title }}</strong> !</p>
+                <p>{{ myFilms[userFilm - 1].myAdvice }}</p>
+                <figure v-if="myFilms[userFilm - 1].imgPath">
+                    <img :src="myFilms[userFilm - 1].imgPath" :alt="'Affiche du film ' + myFilms[userFilm - 1].title">
+                    <figcaption>{{ myFilms[userFilm - 1].title }}</figcaption>
+                </figure>
+            </div>
+        </section>
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script>
